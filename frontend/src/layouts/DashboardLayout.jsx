@@ -485,7 +485,7 @@ export default function DashboardLayout() {
           {isMapPage ? (
             <Outlet />
           ) : (
-            <div className="h-full overflow-y-auto pb-6">
+            <div className="h-full overflow-y-auto pb-20 sm:pb-6">
               <Outlet />
             </div>
           )}
