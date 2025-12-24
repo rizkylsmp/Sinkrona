@@ -65,9 +65,20 @@ body {
 }
 
 /* Remove default body scroll */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   overflow: hidden;
+}
+
+/* Fix for mobile viewport height (address bar issue) */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
 }
 
 /* Map page should not have scroll wrapper */
@@ -75,4 +86,3 @@ html, body, #root {
   height: 100% !important;
   overflow: hidden !important;
 }
-
