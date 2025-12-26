@@ -170,39 +170,27 @@ export default function BackupPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">
-            Backup & Restore
-          </h1>
-          <p className="text-text-tertiary text-sm mt-1">
-            Kelola backup dan restore database sistem
-          </p>
-        </div>
-        {canCreate && (
-          <button
-            onClick={handleBackupNow}
-            disabled={exporting}
-            className="flex items-center gap-2 bg-accent text-surface px-5 py-2.5 rounded-lg hover:opacity-90 transition-all shadow-lg hover:shadow-xl text-sm font-medium disabled:opacity-50"
-          >
-            <span className={exporting ? "animate-spin" : ""}>💾</span>
-            {exporting ? "Membuat Backup..." : "Backup Sekarang"}
-          </button>
-        )}
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary">
+          Backup & Restore
+        </h1>
+        <p className="text-text-tertiary text-sm mt-1">
+          Kelola backup dan restore database sistem
+        </p>
       </div>
 
       {/* Warning Banner */}
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 flex items-start gap-4">
-        <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center shrink-0">
-          <span className="text-xl">⚠️</span>
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+        <div className="w-8 sm:w-10 h-8 sm:h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center shrink-0">
+          <span className="text-lg">⚠️</span>
         </div>
         <div>
-          <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
+          <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
             Peringatan Penting
           </h3>
-          <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+          <ul className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
             <li>
               • Proses backup akan membuat salinan lengkap dari seluruh database
               sistem
@@ -220,72 +208,95 @@ export default function BackupPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-surface rounded-xl border border-border p-5 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-              <span className="text-lg">📅</span>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+        <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-base sm:text-lg">📅</span>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-text-primary">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-semibold text-text-primary truncate">
                 {dbInfo.backupTerakhir}
               </div>
-              <div className="text-xs text-text-tertiary">Backup Terakhir</div>
+              <div className="text-[10px] sm:text-xs text-text-tertiary">Backup Terakhir</div>
             </div>
           </div>
         </div>
-        <div className="bg-surface rounded-xl border border-border p-5 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-              <span className="text-lg">💽</span>
+        <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-base sm:text-lg">💽</span>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-text-primary">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-semibold text-text-primary truncate">
                 {dbInfo.ukuranDatabase}
               </div>
-              <div className="text-xs text-text-tertiary">Ukuran Database</div>
+              <div className="text-[10px] sm:text-xs text-text-tertiary">Ukuran DB</div>
             </div>
           </div>
         </div>
-        <div className="bg-surface rounded-xl border border-border p-5 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-              <span className="text-lg">📊</span>
+        <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-base sm:text-lg">📊</span>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-text-primary">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-semibold text-text-primary truncate">
                 {dbInfo.totalRecord}
               </div>
-              <div className="text-xs text-text-tertiary">Total Record</div>
+              <div className="text-[10px] sm:text-xs text-text-tertiary">Total Record</div>
             </div>
           </div>
         </div>
-        <div className="bg-surface rounded-xl border border-border p-5 hover:shadow-md transition-shadow">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-              <span className="text-lg">✅</span>
+        <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center shrink-0">
+              <span className="text-base sm:text-lg">✅</span>
             </div>
-            <div>
-              <div className="text-sm font-semibold text-green-600 dark:text-green-400">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-semibold text-green-600 dark:text-green-400 truncate">
                 {dbInfo.statusSistem}
               </div>
-              <div className="text-xs text-text-tertiary">Status Sistem</div>
+              <div className="text-[10px] sm:text-xs text-text-tertiary">Status</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Four Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Backup Button Card */}
+        {canCreate && (
+          <div className="bg-surface rounded-xl border border-border overflow-hidden flex flex-col">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border flex items-center gap-2">
+              <span>⚡</span>
+              <h3 className="font-semibold text-text-primary">Backup Sekarang</h3>
+            </div>
+            <div className="p-4 sm:p-6 flex-1 flex flex-col justify-center items-center text-center">
+              <div className="text-4xl mb-3">💾</div>
+              <p className="text-xs sm:text-sm text-text-secondary mb-4">
+                Buat backup database lengkap sekarang
+              </p>
+              <button
+                onClick={handleBackupNow}
+                disabled={exporting}
+                className="w-full bg-accent text-surface px-4 py-2.5 rounded-lg hover:opacity-90 transition-all text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <span className={exporting ? "animate-spin" : ""}>💾</span>
+                {exporting ? "Membuat..." : "Mulai"}
+              </button>
+            </div>
+          </div>
+        )}
         {/* Backup Schedule */}
         <div className="bg-surface rounded-xl border border-border overflow-hidden">
-          <div className="px-6 py-4 border-b border-border flex items-center gap-2">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border flex items-center gap-2\">
             <span>⏰</span>
             <h3 className="font-semibold text-text-primary">
               Jadwal Backup Otomatis
             </h3>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             <div className="flex items-center justify-between p-3 bg-surface-secondary rounded-lg">
               <div className="flex items-center gap-3">
                 <span className="text-lg">🔄</span>
@@ -345,13 +356,13 @@ export default function BackupPage() {
 
         {/* Restore Database */}
         <div className="bg-surface rounded-xl border border-border overflow-hidden">
-          <div className="px-6 py-4 border-b border-border flex items-center gap-2">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border flex items-center gap-2">
             <span>🔄</span>
             <h3 className="font-semibold text-text-primary">
               Restore Database
             </h3>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-4 sm:p-6 space-y-4">
             <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-text-tertiary transition-colors">
               <input
                 type="file"
@@ -419,62 +430,41 @@ export default function BackupPage() {
 
       {/* Backup History */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden">
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="flex items-center gap-2">
             <span>📋</span>
             <h3 className="font-semibold text-text-primary">Riwayat Backup</h3>
           </div>
-          <span className="text-sm text-text-tertiary">
-            {backupHistory.length} backup tersimpan
+          <span className="text-xs sm:text-sm text-text-tertiary">
+            {backupHistory.length} backup
           </span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-surface-secondary border-b border-border">
-              <tr>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Nama File
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Ukuran
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Tanggal
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Oleh
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
+        <div className="p-4 sm:p-6 space-y-3 max-h-96 overflow-y-auto">
+          {backupHistory.length === 0 ? (
+            <div className="text-center text-text-tertiary text-sm py-6">
+              Belum ada backup yang tersimpan
+            </div>
+          ) : (
+            <div className="space-y-2">
               {backupHistory.map((backup) => (
-                <tr
+                <div
                   key={backup.id}
-                  className="hover:bg-surface-secondary transition-colors"
+                  className="p-3 bg-surface-secondary rounded-lg hover:bg-surface-tertiary transition-colors"
                 >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <span>💾</span>
-                      <span className="text-sm font-medium text-text-primary">
-                        {backup.namaFile}
-                      </span>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="hidden sm:inline">💾</span>
+                        <span className="text-xs sm:text-sm font-medium text-text-primary truncate">
+                          {backup.namaFile}
+                        </span>
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-text-tertiary mt-1">
+                        {backup.tanggal} • {backup.ukuran}
+                      </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">
-                    {backup.ukuran}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">
-                    {backup.tanggal}
-                  </td>
-                  <td className="px-6 py-4">
                     <span
-                      className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
+                      className={`inline-block px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold whitespace-nowrap ml-2 ${
                         backup.status === "Success"
                           ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
                           : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
@@ -482,32 +472,29 @@ export default function BackupPage() {
                     >
                       {backup.status}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-text-secondary">
-                    {backup.dilakukanOleh}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      {backup.status === "Success" && (
-                        <button
-                          onClick={() => handleDownloadBackup(backup.namaFile)}
-                          className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface-secondary rounded-lg hover:bg-border transition-colors"
-                        >
-                          ↓ Download
-                        </button>
-                      )}
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                    {backup.status === "Success" && (
                       <button
-                        onClick={() => handleDeleteBackup(backup.id)}
-                        className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                        onClick={() => handleDownloadBackup(backup.namaFile)}
+                        className="px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium text-text-secondary bg-surface rounded hover:bg-border transition-colors whitespace-nowrap"
                       >
-                        × Hapus
+                        <span className="hidden sm:inline">↓ Download</span>
+                        <span className="sm:hidden">↓</span>
                       </button>
-                    </div>
-                  </td>
-                </tr>
+                    )}
+                    <button
+                      onClick={() => handleDeleteBackup(backup.id)}
+                      className="px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-medium text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-900/10 rounded hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors whitespace-nowrap"
+                    >
+                      <span className="hidden sm:inline">× Hapus</span>
+                      <span className="sm:hidden">×</span>
+                    </button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -59,19 +59,19 @@ export default function AssetPage() {
     fetchAssets();
   }, [fetchAssets]);
 
-  const handleSearch = (term) => {
+  const handleSearch = useCallback((term) => {
     setSearchTerm(term);
     setCurrentPage(1);
-  };
+  }, []);
 
-  const handleFilterChange = (newFilters) => {
+  const handleFilterChange = useCallback((newFilters) => {
     setFilters(newFilters);
     setCurrentPage(1);
-  };
+  }, []);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
-  };
+  }, []);
 
   const handleOpenAddForm = () => {
     setEditingAsset(null);

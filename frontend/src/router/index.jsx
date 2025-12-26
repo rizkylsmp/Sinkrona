@@ -1,7 +1,7 @@
 import { createHashRouter, Navigate } from "react-router-dom";
 
 // Layouts
-import DashboardLayout from "../layouts/DashboardLayout";
+import RootLayout from "../layouts/RootLayout";
 
 // Pages
 import LoginPage from "../pages/LoginPage";
@@ -27,12 +27,12 @@ const router = createHashRouter([
     element: <LoginPage />,
   },
 
-  // Protected routes with Dashboard Layout
+  // Protected routes with Root Layout
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <DashboardLayout />
+        <RootLayout />
       </ProtectedRoute>
     ),
     children: [

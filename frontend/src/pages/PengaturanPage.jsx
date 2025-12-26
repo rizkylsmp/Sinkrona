@@ -91,43 +91,44 @@ export default function PengaturanPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Pengaturan Sistem</h1>
           <p className="text-text-tertiary text-sm mt-1">Konfigurasi dan pengaturan aplikasi</p>
         </div>
-        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-2">
-          <span className="text-blue-600 dark:text-blue-400">ℹ️</span>
-          <span className="text-sm text-blue-700 dark:text-blue-300">Hanya dapat diakses oleh <strong>Administrator</strong></span>
+        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-3 sm:px-4 py-2 sm:py-3">
+          <span className="text-blue-600 dark:text-blue-400 text-lg shrink-0">ℹ️</span>
+          <span className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">Hanya dapat diakses oleh <strong>Administrator</strong></span>
         </div>
       </div>
 
       {/* Settings Container */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden">
         {/* Tabs */}
-        <div className="border-b border-border">
-          <div className="flex">
+        <div className="border-b border-border overflow-x-auto">
+          <div className="flex min-w-full sm:min-w-0">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-4 text-sm font-medium transition-all flex items-center gap-2 ${
+                className={`px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap ${
                   activeTab === tab.id
                     ? "text-text-primary border-b-2 border-accent"
                     : "text-text-tertiary hover:text-text-secondary"
                 }`}
               >
-                <span>{tab.icon}</span>
-                {tab.label}
+                <span className="text-base sm:text-lg">{tab.icon}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden text-xs">{tab.label.split(' ')[0]}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* Tab Content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Tab: Umum */}
           {activeTab === "umum" && (
             <div className="max-w-2xl space-y-6">
@@ -149,7 +150,7 @@ export default function PengaturanPage() {
                   className="w-full border border-border bg-surface text-text-primary rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-accent focus:border-accent transition-all resize-none"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-1.5">Email Admin</label>
                   <input
@@ -178,7 +179,7 @@ export default function PengaturanPage() {
                   className="w-full border border-border bg-surface text-text-primary rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-accent focus:border-accent transition-all resize-none"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-1.5">Timezone</label>
                   <select
@@ -284,7 +285,7 @@ export default function PengaturanPage() {
             <div className="max-w-xl space-y-6">
               <div>
                 <label className="block text-sm font-medium text-text-secondary mb-3">Tema Aplikasi</label>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <button
                     onClick={() => handleDisplayChange("tema", "light")}
                     className={`p-4 rounded-lg border-2 transition-all ${
@@ -313,7 +314,7 @@ export default function PengaturanPage() {
                   </button>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-1.5">Item Per Halaman</label>
                   <select
@@ -354,57 +355,58 @@ export default function PengaturanPage() {
           {/* Tab: Manajemen User */}
           {activeTab === "manajemen_user" && (
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h3 className="font-semibold text-text-primary">Daftar User</h3>
                 <button 
                   onClick={() => alert('Tambah User (Logic akan diimplementasikan nanti)')}
-                  className="bg-accent text-surface px-4 py-2 rounded-lg hover:opacity-90 transition-all text-sm font-medium flex items-center gap-2"
+                  className="bg-accent text-surface px-4 py-2 rounded-lg hover:opacity-90 transition-all text-sm font-medium flex items-center justify-center sm:justify-start gap-2"
                 >
                   <span>➕</span>
-                  Tambah User
+                  <span className="hidden sm:inline">Tambah User</span>
+                  <span className="sm:hidden">Tambah</span>
                 </button>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <table className="w-full">
                   <thead className="bg-surface-secondary">
                     <tr>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Username</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Nama Lengkap</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Role</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Status</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Login Terakhir</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-text-secondary uppercase tracking-wider">Aksi</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider">Username</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider hidden sm:table-cell">Nama Lengkap</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider">Role</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider">Status</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider hidden md:table-cell">Login Terakhir</th>
+                      <th className="text-left px-3 sm:px-4 py-2 sm:py-3 text-[10px] sm:text-xs font-semibold text-text-secondary uppercase tracking-wider">Aksi</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {users.map((user) => (
                       <tr key={user.id} className="hover:bg-surface-secondary transition-colors">
-                        <td className="px-4 py-3 text-sm font-medium text-text-primary">{user.username}</td>
-                        <td className="px-4 py-3 text-sm text-text-secondary">{user.namaLengkap}</td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${getRoleBadgeStyle(user.role)}`}>
+                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-text-primary">{user.username}</td>
+                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-secondary hidden sm:table-cell">{user.namaLengkap}</td>
+                        <td className="px-3 sm:px-4 py-2 sm:py-3">
+                          <span className={`inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold ${getRoleBadgeStyle(user.role)}`}>
                             {user.role}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        <td className="px-3 sm:px-4 py-2 sm:py-3">
+                          <span className={`inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold ${
                             user.status === "Aktif" ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
                           }`}>
                             {user.status}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-sm text-text-tertiary">{user.lastLogin}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
+                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-tertiary hidden md:table-cell">{user.lastLogin}</td>
+                        <td className="px-3 sm:px-4 py-2 sm:py-3">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1 sm:gap-2">
                             <button
                               onClick={() => handleToggleUserStatus(user.id)}
-                              className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface-secondary rounded-lg hover:bg-border transition-colors"
+                              className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-text-secondary bg-surface-secondary rounded-lg hover:bg-border transition-colors whitespace-nowrap"
                             >
-                              {user.status === "Aktif" ? "Nonaktifkan" : "Aktifkan"}
+                              {user.status === "Aktif" ? "Nonaktif" : "Aktif"}
                             </button>
                             <button
                               onClick={() => handleDeleteUser(user.id)}
-                              className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                              className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                             >
                               Hapus
                             </button>

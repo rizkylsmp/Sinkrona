@@ -8,26 +8,26 @@ export default function AssetSearch({ onSearch, onFilterChange }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearch(searchTerm);
-    }, 300);
+    }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm, onSearch]);
 
-  const handleSearch = (e) => {
+  const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
-  };
+  }, []);
 
-  const handleStatusChange = (e) => {
+  const handleStatusChange = useCallback((e) => {
     const status = e.target.value;
     setStatusFilter(status);
     onFilterChange({ status });
-  };
+  }, [onFilterChange]);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setSearchTerm("");
     setStatusFilter("");
     onSearch("");
     onFilterChange({ status: "" });
-  };
+  }, [onSearch, onFilterChange]);
 
   return (
     <div className="flex gap-4 items-center flex-wrap">

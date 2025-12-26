@@ -7,7 +7,7 @@ function App() {
   return (
     <ConfirmProvider>
       <RouterProvider router={router} />
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
     </ConfirmProvider>
   );
 }
