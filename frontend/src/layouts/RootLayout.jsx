@@ -15,7 +15,7 @@ export default function RootLayout() {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="h-screen h-[100dvh] bg-surface-secondary flex flex-col overflow-hidden">
+    <div className="h-screen bg-surface-secondary flex flex-col overflow-hidden">
       <Header onMenuClick={toggleSidebar} sidebarOpen={sidebarOpen} />
       <div className="flex flex-1 overflow-hidden min-h-0">
         {/* Desktop Sidebar - fixed height, no scroll */}

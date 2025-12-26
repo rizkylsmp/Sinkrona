@@ -141,7 +141,7 @@ export default function MapCoordinatePicker({
             </MapContainer>
             
             {/* Zoom Controls */}
-            <div className="absolute bottom-2 right-2 bg-surface rounded-lg border border-border shadow-lg overflow-hidden z-[1000]">
+            <div className="absolute bottom-2 right-2 bg-surface rounded-lg border border-border shadow-lg overflow-hidden z-1000">
               <button
                 type="button"
                 onClick={() => {

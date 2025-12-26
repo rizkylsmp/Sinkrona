@@ -250,7 +250,7 @@ export default function NotifikasiPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
         <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center shrink-0">
               <span className="text-sm sm:text-lg">🔔</span>
             </div>
             <div className="min-w-0">
@@ -263,7 +263,7 @@ export default function NotifikasiPage() {
         </div>
         <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center shrink-0">
               <span className="text-sm sm:text-lg">📬</span>
             </div>
             <div className="min-w-0">
@@ -276,7 +276,7 @@ export default function NotifikasiPage() {
         </div>
         <div className="bg-surface rounded-xl border border-border p-3 sm:p-5 hover:shadow-md transition-shadow col-span-2 sm:col-span-1">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center shrink-0">
               <span className="text-sm sm:text-lg">📅</span>
             </div>
             <div className="min-w-0">

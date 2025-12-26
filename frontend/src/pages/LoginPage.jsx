@@ -240,7 +240,7 @@ export default function LoginPage() {
             : "translate-x-full opacity-0"
         }`}
       >
-        <div className="h-full w-screen sm:w-[380px] md:w-[400px] bg-white flex flex-col shadow-2xl max-h-screen overflow-hidden">
+        <div className="h-full w-screen sm:w-95 md:w-100 bg-white flex flex-col shadow-2xl max-h-screen overflow-hidden">
           {/* Toggle Button */}
           <button
             onClick={() => setShowLoginPanel(false)}
@@ -496,7 +496,7 @@ export default function LoginPage() {
 
       {/* Mobile Bottom Bar (when panel hidden) */}
       {!showLoginPanel && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-t from-gray-900 via-gray-900/95 to-transparent pt-10 sm:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-linear-to-t from-gray-900 via-gray-900/95 to-transparent pt-10 sm:hidden">
           <button
             onClick={() => setShowLoginPanel(true)}
             className="w-full bg-white text-gray-900 py-4 rounded-xl font-bold shadow-2xl flex items-center justify-center gap-2 text-base border-2 border-gray-200"

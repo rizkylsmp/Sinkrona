@@ -100,7 +100,7 @@ Status: Tidak ada sengketa atau perkara hukum.`,
       />
 
       {/* Slide Panel */}
-      <div className="fixed inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:h-full sm:w-[900px] sm:max-w-full bg-surface-secondary shadow-2xl z-50 flex flex-col animate-slide-in overflow-hidden">
+      <div className="fixed inset-0 sm:inset-auto sm:top-0 sm:right-0 sm:h-full sm:w-225 sm:max-w-full bg-surface-secondary shadow-2xl z-50 flex flex-col animate-slide-in overflow-hidden">
         {/* Breadcrumb */}
         <div className="bg-surface border-b border-border px-4 sm:px-6 py-2 sm:py-2.5 text-xs flex items-center gap-2">
           <span className="text-text-muted">Data Aset</span>
@@ -431,7 +431,7 @@ Status: Tidak ada sengketa atau perkara hukum.`,
                     Riwayat
                   </button>
                 </div>
-                <div className="p-5 min-h-[150px]">
+                <div className="p-5 min-h-37.5">
                   {activeTab === "keterangan" && (
                     <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
                       {assetDetail.keterangan}
