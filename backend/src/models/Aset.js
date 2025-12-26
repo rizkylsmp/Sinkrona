@@ -35,7 +35,12 @@ const Aset = sequelize.define(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM("Aktif", "Berperkara", "Dijual", "Tidak Aktif"),
+      type: DataTypes.ENUM(
+        "Aktif",
+        "Berperkara",
+        "Indikasi Berperkara",
+        "Tidak Aktif"
+      ),
       defaultValue: "Aktif",
     },
     jenis_aset: {

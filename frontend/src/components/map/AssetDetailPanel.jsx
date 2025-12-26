@@ -2,15 +2,18 @@ export default function AssetDetailPanel({ asset, onClose, onViewDetail }) {
   if (!asset) return null;
 
   const getStatusStyle = (status) => {
-    switch (status) {
+    const s = status?.toLowerCase().replace(/\s+/g, "_");
+    switch (s) {
       case "aktif":
-        return "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300";
+        return "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300";
       case "berperkara":
         return "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300";
-      case "dijual":
+      case "indikasi_berperkara":
         return "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300";
+      case "tidak_aktif":
+        return "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300";
       default:
-        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300";
+        return "bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-300";
     }
   };
 

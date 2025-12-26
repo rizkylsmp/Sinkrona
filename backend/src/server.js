@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
-import sequelize from "./config/database.js";
-import User from "./models/User.js";
+import { sequelize, User, Aset, Riwayat } from "./models/index.js";
 
 // Import routes
 import authRoutes from "./routes/auth.routes.js";
@@ -56,6 +56,32 @@ app.use("/api/riwayat", riwayatRoutes);
 app.use("/api/backup", backupRoutes);
 app.use("/api/notifikasi", notifikasiRoutes);
 app.use("/api/users", userRoutes);
+
+// Landing page - serve from HTML file
+app.get("/", async (req, res) => {
+  const uptime = process.uptime();
+  const uptimeFormatted = `${Math.floor(uptime / 3600)}h ${Math.floor(
+    (uptime % 3600) / 60
+  )}m ${Math.floor(uptime % 60)}s`;
+
+  try {
+    let html = await fs.readFile(
+      path.join(__dirname, "views/landing.html"),
+      "utf8"
+    );
+
+    // Replace placeholders
+    html = html
+      .replace("{{UPTIME}}", uptimeFormatted)
+      .replace("{{SERVER_TIME}}", new Date().toLocaleTimeString("id-ID"))
+      .replace("{{ENV}}", process.env.NODE_ENV || "development")
+      .replace("{{YEAR}}", new Date().getFullYear());
+
+    res.send(html);
+  } catch (error) {
+    res.status(500).send("Error loading landing page");
+  }
+});
 
 // Health check
 app.get("/api/health", (req, res) => {

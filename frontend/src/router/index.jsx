@@ -13,9 +13,11 @@ import NotifikasiPage from "../pages/NotifikasiPage";
 import BackupPage from "../pages/BackupPage";
 import ProfilPage from "../pages/ProfilPage";
 import PengaturanPage from "../pages/PengaturanPage";
+import UserManagementPage from "../pages/UserManagementPage";
 
-// Auth Guard Component
+// Auth Guard Components
 import ProtectedRoute from "../components/ProtectedRoute";
+import RoleGuard from "../components/RoleGuard";
 
 // Router configuration using createHashRouter
 const router = createHashRouter([
@@ -60,7 +62,11 @@ const router = createHashRouter([
       },
       {
         path: "backup",
-        element: <BackupPage />,
+        element: (
+          <RoleGuard menuId="backup">
+            <BackupPage />
+          </RoleGuard>
+        ),
       },
       {
         path: "profil",
@@ -68,7 +74,19 @@ const router = createHashRouter([
       },
       {
         path: "pengaturan",
-        element: <PengaturanPage />,
+        element: (
+          <RoleGuard menuId="pengaturan">
+            <PengaturanPage />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "users",
+        element: (
+          <RoleGuard menuId="user">
+            <UserManagementPage />
+          </RoleGuard>
+        ),
       },
     ],
   },

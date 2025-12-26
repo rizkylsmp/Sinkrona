@@ -1,26 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-export default function AssetSearch({ onSearch, onFilterChange, onAddClick }) {
+export default function AssetSearch({ onSearch, onFilterChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [lokasiFilter, setLokasiFilter] = useState("");
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearch(searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm, onSearch]);
 
   const handleSearch = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    onSearch(term);
+    setSearchTerm(e.target.value);
   };
 
   const handleStatusChange = (e) => {
     const status = e.target.value;
     setStatusFilter(status);
-    onFilterChange({ status, lokasi: lokasiFilter });
+    onFilterChange({ status });
   };
 
-  const handleLokasiChange = (e) => {
-    const lokasi = e.target.value;
-    setLokasiFilter(lokasi);
-    onFilterChange({ status: statusFilter, lokasi });
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("");
+    onSearch("");
+    onFilterChange({ status: "" });
   };
 
   return (
@@ -31,11 +37,19 @@ export default function AssetSearch({ onSearch, onFilterChange, onAddClick }) {
           <span className="px-3 text-text-tertiary">🔍</span>
           <input
             type="text"
-            placeholder="Cari aset..."
+            placeholder="Cari kode, nama, atau lokasi aset..."
             value={searchTerm}
             onChange={handleSearch}
             className="flex-1 px-3 py-2.5 text-sm outline-none rounded-r-lg bg-transparent text-text-primary placeholder:text-text-muted"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="px-3 text-text-tertiary hover:text-text-primary"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
 
@@ -45,32 +59,22 @@ export default function AssetSearch({ onSearch, onFilterChange, onAddClick }) {
         onChange={handleStatusChange}
         className="border border-border bg-surface text-text-secondary rounded-lg px-4 py-2.5 text-sm hover:border-text-tertiary cursor-pointer focus:ring-2 focus:ring-accent focus:border-accent transition-all"
       >
-        <option value="">Status</option>
-        <option value="aktif">Aktif</option>
-        <option value="berperkara">Berperkara</option>
-        <option value="tidak-aktif">Tidak Aktif</option>
+        <option value="">Semua Status</option>
+        <option value="Aktif">Aktif</option>
+        <option value="Berperkara">Berperkara</option>
+        <option value="Indikasi Berperkara">Indikasi Berperkara</option>
+        <option value="Tidak Aktif">Tidak Aktif</option>
       </select>
 
-      {/* Lokasi Filter */}
-      <select
-        value={lokasiFilter}
-        onChange={handleLokasiChange}
-        className="border border-border bg-surface text-text-secondary rounded-lg px-4 py-2.5 text-sm hover:border-text-tertiary cursor-pointer focus:ring-2 focus:ring-accent focus:border-accent transition-all"
-      >
-        <option value="">Lokasi</option>
-        <option value="yogyakarta">Yogyakarta</option>
-        <option value="jakarta">Jakarta</option>
-        <option value="surabaya">Surabaya</option>
-        <option value="medan">Medan</option>
-      </select>
-
-      {/* Export Button */}
-      <button 
-        onClick={() => alert('Export Data (Logic akan diimplementasikan nanti)')}
-        className="border border-border rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:border-text-tertiary transition-all"
-      >
-        📤 Export
-      </button>
+      {/* Clear Filters */}
+      {(searchTerm || statusFilter) && (
+        <button
+          onClick={handleClearFilters}
+          className="border border-border rounded-lg px-4 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:border-text-tertiary transition-all"
+        >
+          🗑️ Reset
+        </button>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // ===========================================
 // ROLE PERMISSIONS berdasarkan Use Case Diagram
 // ===========================================
-// 
+//
 // Admin Kantor Pertanahan (admin):
 //   - Backup & restore data
 //   - Melihat data aset & data pemerintahan
@@ -38,28 +38,28 @@ import jwt from "jsonwebtoken";
 // Permission constants
 export const PERMISSIONS = {
   // Aset Management
-  ASET_CREATE: 'aset:create',
-  ASET_READ: 'aset:read',
-  ASET_READ_ALL: 'aset:read_all',
-  ASET_UPDATE: 'aset:update',
-  ASET_DELETE: 'aset:delete',
-  
+  ASET_CREATE: "aset:create",
+  ASET_READ: "aset:read",
+  ASET_READ_ALL: "aset:read_all",
+  ASET_UPDATE: "aset:update",
+  ASET_DELETE: "aset:delete",
+
   // Peta/Map Layers
-  PETA_VIEW: 'peta:view',
-  LAYER_UMUM: 'layer:umum',
-  LAYER_TATA_RUANG: 'layer:tata_ruang',
-  LAYER_POTENSI_BERPERKARA: 'layer:potensi_berperkara',
-  LAYER_SEBARAN_PERKARA: 'layer:sebaran_perkara',
-  
+  PETA_VIEW: "peta:view",
+  LAYER_UMUM: "layer:umum",
+  LAYER_TATA_RUANG: "layer:tata_ruang",
+  LAYER_POTENSI_BERPERKARA: "layer:potensi_berperkara",
+  LAYER_SEBARAN_PERKARA: "layer:sebaran_perkara",
+
   // System Features
-  RIWAYAT_VIEW: 'riwayat:view',
-  NOTIFIKASI_VIEW: 'notifikasi:view',
-  BACKUP_MANAGE: 'backup:manage',
-  USER_MANAGE: 'user:manage',
-  
+  RIWAYAT_VIEW: "riwayat:view",
+  NOTIFIKASI_VIEW: "notifikasi:view",
+  BACKUP_MANAGE: "backup:manage",
+  USER_MANAGE: "user:manage",
+
   // Dashboard
-  DASHBOARD_FULL: 'dashboard:full',
-  DASHBOARD_LIMITED: 'dashboard:limited',
+  DASHBOARD_FULL: "dashboard:full",
+  DASHBOARD_LIMITED: "dashboard:limited",
 };
 
 // Role-Permission mapping berdasarkan Use Case
@@ -83,7 +83,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.USER_MANAGE,
     PERMISSIONS.DASHBOARD_FULL,
   ],
-  
+
   dinas_aset: [
     // Mengelola data aset (CRUD)
     PERMISSIONS.ASET_CREATE,
@@ -101,7 +101,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.NOTIFIKASI_VIEW,
     PERMISSIONS.DASHBOARD_FULL,
   ],
-  
+
   bpn: [
     // Read only untuk data aset
     PERMISSIONS.ASET_READ,
@@ -114,7 +114,7 @@ export const ROLE_PERMISSIONS = {
     PERMISSIONS.NOTIFIKASI_VIEW,
     PERMISSIONS.DASHBOARD_LIMITED,
   ],
-  
+
   tata_ruang: [
     // Read only untuk data aset
     PERMISSIONS.ASET_READ,
@@ -146,10 +146,14 @@ export const authMiddleware = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    
+
+    // Normalize role to lowercase for permission checking
+    const normalizedRole = decoded.role?.toLowerCase();
+    req.user.normalizedRole = normalizedRole;
+
     // Attach user permissions
-    req.user.permissions = ROLE_PERMISSIONS[decoded.role] || [];
-    
+    req.user.permissions = ROLE_PERMISSIONS[normalizedRole] || [];
+
     next();
   } catch (error) {
     res.status(401).json({ error: "Token tidak valid atau sudah expired" });
@@ -164,12 +168,15 @@ export const roleMiddleware = (...allowedRoles) => {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    
-    if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ 
+
+    // Use normalized role for comparison
+    const userRole = req.user.normalizedRole || req.user.role?.toLowerCase();
+
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).json({
         error: "Akses ditolak",
         message: `Role '${req.user.role}' tidak memiliki akses ke resource ini`,
-        requiredRoles: allowedRoles
+        requiredRoles: allowedRoles,
       });
     }
     next();
@@ -184,17 +191,18 @@ export const permissionMiddleware = (...requiredPermissions) => {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    
-    const userPermissions = ROLE_PERMISSIONS[req.user.role] || [];
-    const hasPermission = requiredPermissions.every(perm => 
+
+    const userRole = req.user.normalizedRole || req.user.role?.toLowerCase();
+    const userPermissions = ROLE_PERMISSIONS[userRole] || [];
+    const hasPermission = requiredPermissions.every((perm) =>
       userPermissions.includes(perm)
     );
-    
+
     if (!hasPermission) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: "Akses ditolak",
         message: "Anda tidak memiliki izin untuk melakukan aksi ini",
-        requiredPermissions
+        requiredPermissions,
       });
     }
     next();
@@ -209,16 +217,17 @@ export const anyPermissionMiddleware = (...requiredPermissions) => {
     if (!req.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    
-    const userPermissions = ROLE_PERMISSIONS[req.user.role] || [];
-    const hasAnyPermission = requiredPermissions.some(perm => 
+
+    const userRole = req.user.normalizedRole || req.user.role?.toLowerCase();
+    const userPermissions = ROLE_PERMISSIONS[userRole] || [];
+    const hasAnyPermission = requiredPermissions.some((perm) =>
       userPermissions.includes(perm)
     );
-    
+
     if (!hasAnyPermission) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: "Akses ditolak",
-        message: "Anda tidak memiliki izin untuk melakukan aksi ini"
+        message: "Anda tidak memiliki izin untuk melakukan aksi ini",
       });
     }
     next();
@@ -229,7 +238,8 @@ export const anyPermissionMiddleware = (...requiredPermissions) => {
  * Helper to check permission in code (not middleware)
  */
 export const hasPermission = (role, permission) => {
-  const permissions = ROLE_PERMISSIONS[role] || [];
+  const normalizedRole = role?.toLowerCase();
+  const permissions = ROLE_PERMISSIONS[normalizedRole] || [];
   return permissions.includes(permission);
 };
 
@@ -237,7 +247,8 @@ export const hasPermission = (role, permission) => {
  * Helper to get all permissions for a role
  */
 export const getPermissions = (role) => {
-  return ROLE_PERMISSIONS[role] || [];
+  const normalizedRole = role?.toLowerCase();
+  return ROLE_PERMISSIONS[normalizedRole] || [];
 };
 
 // ===========================================
@@ -245,22 +256,32 @@ export const getPermissions = (role) => {
 // ===========================================
 
 // Hanya Admin
-export const adminOnly = roleMiddleware('admin');
+export const adminOnly = roleMiddleware("admin");
 
 // Admin dan Dinas Aset (yang bisa CRUD aset)
-export const canManageAset = roleMiddleware('admin', 'dinas_aset');
+export const canManageAset = roleMiddleware("admin", "dinas_aset");
 
 // Semua role yang login bisa melihat aset
-export const canViewAset = roleMiddleware('admin', 'dinas_aset', 'bpn', 'tata_ruang');
+export const canViewAset = roleMiddleware(
+  "admin",
+  "dinas_aset",
+  "bpn",
+  "tata_ruang"
+);
 
 // Role yang bisa melihat data detail/lengkap
-export const canViewFullData = roleMiddleware('admin', 'dinas_aset', 'bpn', 'tata_ruang');
+export const canViewFullData = roleMiddleware(
+  "admin",
+  "dinas_aset",
+  "bpn",
+  "tata_ruang"
+);
 
 // Role yang bisa melihat riwayat
-export const canViewRiwayat = roleMiddleware('admin', 'dinas_aset');
+export const canViewRiwayat = roleMiddleware("admin", "dinas_aset");
 
 // Role yang bisa backup/restore
-export const canBackup = roleMiddleware('admin');
+export const canBackup = roleMiddleware("admin");
 
 // Role yang bisa manage users
-export const canManageUsers = roleMiddleware('admin');
+export const canManageUsers = roleMiddleware("admin");

@@ -6,11 +6,18 @@ export default function GuestAssetPanel({ asset, onClose }) {
   if (!asset) return null;
 
   const getStatusColor = (status) => {
-    switch (status) {
-      case "aktif": return "bg-green-500";
-      case "berperkara": return "bg-red-500";
-      case "dijual": return "bg-blue-500";
-      default: return "bg-yellow-500";
+    const s = status?.toLowerCase().replace(/\s+/g, "_");
+    switch (s) {
+      case "aktif":
+        return "bg-emerald-500";
+      case "berperkara":
+        return "bg-red-500";
+      case "indikasi_berperkara":
+        return "bg-blue-500";
+      case "tidak_aktif":
+        return "bg-amber-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
@@ -36,14 +43,16 @@ export default function GuestAssetPanel({ asset, onClose }) {
       <div className="p-4 space-y-4">
         {/* Asset Name with Status Indicator */}
         <div className="flex items-start gap-3">
-          <div className={`w-3 h-3 rounded-full mt-1 ${getStatusColor(asset.status)}`} />
+          <div
+            className={`w-3 h-3 rounded-full mt-1 ${getStatusColor(
+              asset.status
+            )}`}
+          />
           <div>
             <h4 className="font-semibold text-text-primary text-sm leading-tight">
               {asset.nama_aset}
             </h4>
-            <p className="text-xs text-text-tertiary mt-1">
-              {asset.kode_aset}
-            </p>
+            <p className="text-xs text-text-tertiary mt-1">{asset.kode_aset}</p>
           </div>
         </div>
 
@@ -53,7 +62,9 @@ export default function GuestAssetPanel({ asset, onClose }) {
           <div className="space-y-2 blur-sm select-none pointer-events-none">
             <div className="flex justify-between">
               <span className="text-xs text-text-tertiary">Lokasi</span>
-              <span className="text-xs text-text-secondary">██████████████</span>
+              <span className="text-xs text-text-secondary">
+                ██████████████
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-xs text-text-tertiary">Luas</span>
@@ -68,13 +79,23 @@ export default function GuestAssetPanel({ asset, onClose }) {
               <span className="text-xs text-text-secondary">Rp ██████████</span>
             </div>
           </div>
-          
+
           {/* Lock Overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="bg-surface/80 backdrop-blur-sm rounded-lg px-3 py-2 border border-border">
               <div className="flex items-center gap-2 text-text-secondary">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
                 <span className="text-xs font-medium">Detail Terkunci</span>
               </div>
@@ -95,17 +116,27 @@ export default function GuestAssetPanel({ asset, onClose }) {
               Login untuk mengakses informasi detail aset
             </p>
           </div>
-          
-          <button 
+
+          <button
             onClick={() => navigate("/login")}
             className="w-full bg-accent text-white px-4 py-2.5 text-sm font-medium rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+              />
             </svg>
             <span>Login Sekarang</span>
           </button>
-          
+
           <p className="text-[10px] text-text-muted">
             Belum punya akun? Hubungi administrator
           </p>

@@ -14,16 +14,18 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
 });
 
-// Custom icon colors based on status
+// Custom icon colors based on status - consistent across app
 const getMarkerIcon = (status) => {
   const colors = {
-    aktif: "#22c55e", // green
-    berperkara: "#ef4444", // red
-    tidak_aktif: "#f59e0b", // orange
-    dijual: "#3b82f6", // blue
+    aktif: "#10b981", // emerald-500
+    berperkara: "#ef4444", // red-500
+    tidak_aktif: "#f59e0b", // amber-500
+    indikasi_berperkara: "#3b82f6", // blue-500
+    "tidak aktif": "#f59e0b",
+    "indikasi berperkara": "#3b82f6",
   };
 
-  const color = colors[status] || "#6b7280";
+  const color = colors[status?.toLowerCase()] || "#6b7280";
 
   return L.divIcon({
     html: `<div style="background-color: ${color}; border: 3px solid white; border-radius: 50%; width: 28px; height: 28px; box-shadow: 0 3px 8px rgba(0,0,0,0.25);"></div>`,

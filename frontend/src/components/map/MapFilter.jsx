@@ -14,10 +14,14 @@ export default function MapFilter({
 
   // Status layers yang bisa di-toggle untuk filter marker di peta
   const statusLayers = [
-    { id: "aktif", label: "Aset Aktif", color: "#22c55e" },
+    { id: "aktif", label: "Aset Aktif", color: "#10b981" },
     { id: "berperkara", label: "Aset Berperkara", color: "#ef4444" },
+    {
+      id: "indikasi_berperkara",
+      label: "Indikasi Berperkara",
+      color: "#3b82f6",
+    },
     { id: "tidak_aktif", label: "Aset Tidak Aktif", color: "#f59e0b" },
-    { id: "dijual", label: "Aset Dijual", color: "#3b82f6" },
   ];
 
   const handleLayerToggle = (layerId) => {
@@ -78,7 +82,9 @@ export default function MapFilter({
     <div className="p-4 space-y-4">
       {/* Filter Status Aset */}
       <div className="bg-surface-secondary rounded-lg p-4">
-        <h4 className="font-semibold text-sm text-text-primary mb-3">Tampilkan Aset</h4>
+        <h4 className="font-semibold text-sm text-text-primary mb-3">
+          Tampilkan Aset
+        </h4>
         <div className="space-y-2">
           {statusLayers.map((layer) => (
             <label
@@ -103,7 +109,9 @@ export default function MapFilter({
 
       {/* Search */}
       <div>
-        <h4 className="font-semibold text-sm text-text-primary mb-2">Pencarian</h4>
+        <h4 className="font-semibold text-sm text-text-primary mb-2">
+          Pencarian
+        </h4>
         <div className="flex items-center border border-border rounded-lg bg-surface">
           <span className="px-3 text-text-muted">🔍</span>
           <input
@@ -169,7 +177,9 @@ export default function MapFilter({
 
       {/* Statistik */}
       <div className="bg-surface-secondary rounded-lg p-4">
-        <h4 className="font-semibold text-sm text-text-primary mb-3">Statistik Aset</h4>
+        <h4 className="font-semibold text-sm text-text-primary mb-3">
+          Statistik Aset
+        </h4>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="text-text-tertiary">Total Aset</span>
@@ -180,21 +190,27 @@ export default function MapFilter({
               <span className="w-2 h-2 rounded-full bg-green-500"></span>
               <span className="text-text-tertiary">Aktif</span>
             </div>
-            <span className="font-semibold text-green-600 dark:text-green-400">3</span>
+            <span className="font-semibold text-green-600 dark:text-green-400">
+              3
+            </span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-red-500"></span>
               <span className="text-text-tertiary">Berperkara</span>
             </div>
-            <span className="font-semibold text-red-600 dark:text-red-400">1</span>
+            <span className="font-semibold text-red-600 dark:text-red-400">
+              1
+            </span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-              <span className="text-text-tertiary">Dijual</span>
+              <span className="text-text-tertiary">Indikasi</span>
             </div>
-            <span className="font-semibold text-blue-600 dark:text-blue-400">1</span>
+            <span className="font-semibold text-blue-600 dark:text-blue-400">
+              1
+            </span>
           </div>
         </div>
       </div>

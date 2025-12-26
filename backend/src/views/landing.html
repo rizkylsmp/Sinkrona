@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sinkrona API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        min-height: 100vh;
+        color: #e2e8f0;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 36px;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: #94a3b8;
+        font-size: 1.1rem;
+      }
+
+      /* Status Card */
+      .status-card {
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(71, 85, 105, 0.5);
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+      }
+
+      .status-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        background: #22c55e;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+        }
+        50% {
+          opacity: 0.8;
+          box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+        }
+      }
+
+      .status-header h2 {
+        font-size: 1.25rem;
+        color: #22c55e;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #3b82f6;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 5px;
+      }
+
+      /* Endpoints Section */
+      .endpoints-section h2 {
+        font-size: 1.25rem;
+        margin-bottom: 20px;
+        color: #f1f5f9;
+      }
+
+      .endpoint-group {
+        margin-bottom: 25px;
+      }
+
+      .endpoint-group-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #8b5cf6;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .endpoint-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .endpoint {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+
+      .endpoint:hover {
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateX(5px);
+      }
+
+      .method {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .method.get {
+        background: #22c55e20;
+        color: #22c55e;
+      }
+      .method.post {
+        background: #3b82f620;
+        color: #3b82f6;
+      }
+      .method.put {
+        background: #f59e0b20;
+        color: #f59e0b;
+      }
+      .method.delete {
+        background: #ef444420;
+        color: #ef4444;
+      }
+
+      .path {
+        font-family: "Consolas", "Monaco", monospace;
+        color: #e2e8f0;
+        font-size: 0.9rem;
+      }
+
+      .desc {
+        color: #64748b;
+        font-size: 0.8rem;
+        margin-left: auto;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(71, 85, 105, 0.3);
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+
+      .footer a {
+        color: #3b82f6;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.75rem;
+        }
+
+        .endpoint {
+          flex-wrap: wrap;
+        }
+
+        .desc {
+          margin-left: 62px;
+          width: 100%;
+          margin-top: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">S</div>
+        <h1>Sinkrona API</h1>
+        <p class="subtitle">Sistem Informasi Manajemen Aset Kota Pasuruan</p>
+      </header>
+
+      <!-- Status Card -->
+      <div class="status-card">
+        <div class="status-header">
+          <div class="status-dot"></div>
+          <h2>Server Online</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">v1.0.0</div>
+            <div class="stat-label">Version</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="uptime">{{UPTIME}}</div>
+            <div class="stat-label">Uptime</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="serverTime">{{SERVER_TIME}}</div>
+            <div class="stat-label">Server Time</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ENV}}</div>
+            <div class="stat-label">Environment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Endpoints -->
+      <div class="status-card endpoints-section">
+        <h2>📡 API Endpoints</h2>
+
+        <!-- Authentication -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">🔐 Authentication</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="path">/api/auth/login</span>
+              <span class="desc">Login user</span>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="path">/api/auth/logout</span>
+              <span class="desc">Logout user</span>
+            </div>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/auth/me</span>
+              <span class="desc">Get current user</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aset Management -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">🏢 Aset Management</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/aset</span>
+              <span class="desc">List all assets</span>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="path">/api/aset</span>
+              <span class="desc">Create new asset</span>
+            </div>
+            <div class="endpoint">
+              <span class="method put">PUT</span>
+              <span class="path">/api/aset/:id</span>
+              <span class="desc">Update asset</span>
+            </div>
+            <div class="endpoint">
+              <span class="method delete">DELETE</span>
+              <span class="path">/api/aset/:id</span>
+              <span class="desc">Delete asset</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Peta / Map -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">🗺️ Peta / Map</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/peta/layers</span>
+              <span class="desc">Get map layers</span>
+            </div>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/peta/markers</span>
+              <span class="desc">Get map markers</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">👥 User Management</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/users</span>
+              <span class="desc">List all users</span>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="path">/api/users</span>
+              <span class="desc">Create new user</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Riwayat / Audit Log -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">📜 Riwayat / Audit Log</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/riwayat</span>
+              <span class="desc">Get activity logs</span>
+            </div>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/riwayat/stats</span>
+              <span class="desc">Get statistics</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifikasi -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">🔔 Notifikasi</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/notifikasi</span>
+              <span class="desc">Get notifications</span>
+            </div>
+            <div class="endpoint">
+              <span class="method put">PUT</span>
+              <span class="path">/api/notifikasi/read-all</span>
+              <span class="desc">Mark all as read</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backup -->
+        <div class="endpoint-group">
+          <div class="endpoint-group-title">💾 Backup</div>
+          <div class="endpoint-list">
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="path">/api/backup</span>
+              <span class="desc">List backups</span>
+            </div>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="path">/api/backup/export</span>
+              <span class="desc">Export data</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>© {{YEAR}} Sinkrona - Sistem Informasi Manajemen Aset</p>
+        <p style="margin-top: 8px">Developed by <a href="#">Fikry Satrio</a></p>
+      </footer>
+    </div>
+
+    <script>
+      // Update server time every second
+      function updateTime() {
+        const timeEl = document.getElementById("serverTime");
+        if (timeEl) {
+          timeEl.textContent = new Date().toLocaleTimeString("id-ID");
+        }
+      }
+      setInterval(updateTime, 1000);
+    </script>
+  </body>
+</html>

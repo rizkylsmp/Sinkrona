@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { authService } from "../services/api";
@@ -13,12 +13,13 @@ import { Label } from "../components/ui/Label";
 // Custom marker icon
 const getMarkerIcon = (status) => {
   const colors = {
-    aktif: "#22c55e",
+    aktif: "#10b981",
     berperkara: "#ef4444",
+    indikasi_berperkara: "#3b82f6",
     tidak_aktif: "#f59e0b",
-    dijual: "#3b82f6",
   };
-  const color = colors[status] || "#6b7280";
+  const s = status?.toLowerCase().replace(/\s+/g, "_");
+  const color = colors[s] || "#6b7280";
   return L.divIcon({
     html: `<div style="background-color: ${color}; border: 3px solid white; border-radius: 50%; width: 20px; height: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>`,
     iconSize: [20, 20],
@@ -56,7 +57,13 @@ const sampleAssets = [
     lat: -7.652,
     lng: 112.915,
   },
-  { id: 5, nama: "Taman Kota", status: "dijual", lat: -7.64, lng: 112.913 },
+  {
+    id: 5,
+    nama: "Taman Kota",
+    status: "indikasi_berperkara",
+    lat: -7.64,
+    lng: 112.913,
+  },
   {
     id: 6,
     nama: "Kawasan Industri",
@@ -155,7 +162,26 @@ export default function LoginPage() {
               key={asset.id}
               position={[asset.lat, asset.lng]}
               icon={getMarkerIcon(asset.status)}
-            />
+            >
+              <Popup closeButton={false} className="simple-popup">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      asset.status === "aktif"
+                        ? "bg-emerald-500"
+                        : asset.status === "berperkara"
+                        ? "bg-red-500"
+                        : asset.status === "indikasi_berperkara"
+                        ? "bg-blue-500"
+                        : "bg-amber-500"
+                    }`}
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    {asset.nama}
+                  </span>
+                </div>
+              </Popup>
+            </Marker>
           ))}
         </MapContainer>
       </div>
@@ -188,9 +214,10 @@ export default function LoginPage() {
         <div className="bg-gray-900/80 backdrop-blur-md rounded-xl md:rounded-2xl px-3 md:px-4 py-2 md:py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-3 md:gap-4">
             {[
-              { label: "Aktif", color: "bg-green-500" },
+              { label: "Aktif", color: "bg-emerald-500" },
               { label: "Berperkara", color: "bg-red-500" },
-              { label: "Dijual", color: "bg-blue-500" },
+              { label: "Indikasi", color: "bg-blue-500" },
+              { label: "Tidak Aktif", color: "bg-amber-500" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-1.5">
                 <div
@@ -265,10 +292,10 @@ export default function LoginPage() {
                 </span>
               </div>
               <h2 className="text-gray-900 font-bold text-base md:text-xl">
-                Masuk ke Akun
+                SINKRONA
               </h2>
               <p className="text-gray-500 text-xs md:text-sm mt-1">
-                Akses sistem manajemen aset tanah
+                Masuk ke Akun
               </p>
             </div>
 
@@ -434,7 +461,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="px-6 md:px-8 py-2 md:py-4 border-t border-gray-100 bg-white shrink-0">
             <p className="text-center text-gray-400 text-[10px] md:text-xs">
-              © 2025 SINKRONA • Kota Pasuruan
+              © 2025 SINKRONA • Fikry Satrio
             </p>
           </div>
         </div>

@@ -1,134 +1,204 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
+import { notifikasiService } from "../services/api";
 
 export default function NotifikasiPage() {
   const [activeTab, setActiveTab] = useState("semua");
-  const [notifications, setNotifications] = useState([
+  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch notifications
+  const fetchNotifications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = {};
+      if (activeTab === "belum_dibaca") params.unreadOnly = "true";
+
+      const response = await notifikasiService.getAll(params);
+      const data = response.data.data || [];
+
+      // Transform API data to component format
+      const transformedData = data.map((notif) => ({
+        id: notif.id_notifikasi,
+        type: notif.kategori || "info",
+        icon: getNotifIcon(notif.kategori),
+        iconBg: getNotifIconBg(notif.kategori),
+        title: notif.judul,
+        isNew: !notif.dibaca,
+        time: formatTimeAgo(notif.created_at),
+        content: notif.pesan,
+        detail: notif.detail || "",
+        isRead: notif.dibaca,
+        referensi: notif.referensi,
+        referensi_id: notif.referensi_id,
+      }));
+
+      setNotifications(transformedData);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      // Use sample data as fallback
+      setNotifications(getSampleNotifications());
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab]);
+
+  // Fetch unread count
+  const fetchUnreadCount = useCallback(async () => {
+    try {
+      const response = await notifikasiService.getUnreadCount();
+      setUnreadCount(response.data.data?.count || 0);
+    } catch (error) {
+      console.error("Error fetching unread count:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    fetchUnreadCount();
+  }, [fetchNotifications, fetchUnreadCount]);
+
+  // Helper functions
+  const getNotifIcon = (kategori) => {
+    const icons = {
+      login: "👤",
+      update: "📝",
+      warning: "⚠️",
+      success: "✅",
+      backup: "💾",
+      user: "👥",
+      report: "📊",
+      info: "ℹ️",
+      aset: "🏢",
+    };
+    return icons[kategori] || "🔔";
+  };
+
+  const getNotifIconBg = (kategori) => {
+    const bgs = {
+      login: "bg-gray-100 dark:bg-gray-800",
+      update: "bg-amber-100 dark:bg-amber-900/30",
+      warning: "bg-orange-100 dark:bg-orange-900/30",
+      success: "bg-emerald-100 dark:bg-emerald-900/30",
+      backup: "bg-purple-100 dark:bg-purple-900/30",
+      user: "bg-blue-100 dark:bg-blue-900/30",
+      report: "bg-orange-100 dark:bg-orange-900/30",
+      info: "bg-blue-100 dark:bg-blue-900/30",
+      aset: "bg-indigo-100 dark:bg-indigo-900/30",
+    };
+    return bgs[kategori] || "bg-gray-100 dark:bg-gray-800";
+  };
+
+  const formatTimeAgo = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return "Baru saja";
+    if (diffMins < 60) return `${diffMins} menit yang lalu`;
+    if (diffHours < 24) return `${diffHours} jam yang lalu`;
+    if (diffDays === 1) return "Kemarin";
+    if (diffDays < 7) return `${diffDays} hari yang lalu`;
+    return date.toLocaleDateString("id-ID");
+  };
+
+  // Sample data fallback
+  const getSampleNotifications = () => [
     {
       id: 1,
-      type: "login",
-      icon: "👤",
-      iconBg: "bg-gray-100",
-      title: "Login Berhasil",
+      type: "info",
+      icon: "ℹ️",
+      iconBg: "bg-blue-100 dark:bg-blue-900/30",
+      title: "Selamat Datang",
       isNew: true,
-      time: "2 menit yang lalu",
-      content: "Anda berhasil login ke sistem pada 15 Januari 2025, pukul 14:35:22 WIB.",
-      detail: "IP Address: 192.168.1.100 | Device: Chrome (Windows)",
-      actions: ["tandai_dibaca", "hapus"],
+      time: "Baru saja",
+      content:
+        "Selamat datang di Sinkrona! Mulai kelola aset tanah Anda dengan mudah.",
+      detail: "",
       isRead: false,
     },
-    {
-      id: 2,
-      type: "update",
-      icon: "📝",
-      iconBg: "bg-yellow-100",
-      title: "Perubahan Data Aset",
-      isNew: true,
-      time: "15 menit yang lalu",
-      content: 'Data aset AST-045 telah diupdate oleh "bpn_user01".',
-      detail: 'Perubahan: Status berubah dari "Aktif" menjadi "Dalam Verifikasi"',
-      actions: ["lihat_detail", "tandai_dibaca", "hapus"],
-      isRead: false,
-    },
-    {
-      id: 3,
-      type: "warning",
-      icon: "⚠️",
-      iconBg: "bg-orange-100",
-      title: "Peringatan Sistem",
-      isNew: true,
-      time: "1 jam yang lalu",
-      content: "Backup otomatis sistem akan dilakukan pada 16 Januari 2025, pukul 02:00 WIB.",
-      detail: "Sistem mungkin tidak dapat diakses selama 10-15 menit.",
-      actions: ["tandai_dibaca", "hapus"],
-      isRead: false,
-    },
-    {
-      id: 4,
-      type: "success",
-      icon: "✅",
-      iconBg: "bg-green-100",
-      title: "Verifikasi Data Selesai",
-      isNew: false,
-      time: "3 jam yang lalu",
-      content: "Verifikasi data aset AST-032 oleh BPN telah selesai.",
-      detail: "Status: Disetujui | Nomor Sertifikat: SHM-0012025",
-      actions: ["lihat_detail", "hapus"],
-      isRead: true,
-    },
-    {
-      id: 5,
-      type: "backup",
-      icon: "💾",
-      iconBg: "bg-purple-100",
-      title: "Backup Berhasil",
-      isNew: false,
-      time: "Kemarin, 02:15",
-      content: "Backup database sistem telah berhasil dilakukan.",
-      detail: "File: backup_20250114_021500.sql | Ukuran: 156 MB",
-      actions: ["download", "hapus"],
-      isRead: true,
-    },
-    {
-      id: 6,
-      type: "user",
-      icon: "👥",
-      iconBg: "bg-blue-100",
-      title: "User Baru Terdaftar",
-      isNew: false,
-      time: "2 hari yang lalu",
-      content: 'User baru "tataruang02" telah didaftarkan dalam sistem.',
-      detail: "Role: Dinas Tata Ruang | Oleh: admin01",
-      actions: ["lihat_profil", "hapus"],
-      isRead: true,
-    },
-    {
-      id: 7,
-      type: "report",
-      icon: "📊",
-      iconBg: "bg-orange-100",
-      title: "Laporan Bulanan Tersedia",
-      isNew: false,
-      time: "3 hari yang lalu",
-      content: "Laporan bulanan Desember 2024 telah dibuat dan siap didownload.",
-      detail: "Total Aset: 1,234 | Aset Baru: 45 | Perubahan Status: 23",
-      actions: ["download_laporan", "hapus"],
-      isRead: true,
-    },
-  ]);
+  ];
 
-  // Statistics
+  // Statistics (computed from data)
   const stats = {
     total: notifications.length,
     belumDibaca: notifications.filter((n) => !n.isRead).length,
-    hariIni: notifications.filter((n) => n.time.includes("menit") || n.time.includes("jam")).length,
+    hariIni: notifications.filter(
+      (n) =>
+        n.time.includes("menit") ||
+        n.time.includes("jam") ||
+        n.time === "Baru saja"
+    ).length,
   };
 
   const tabs = [
     { id: "semua", label: "Semua", count: stats.total },
     { id: "belum_dibaca", label: "Belum Dibaca", count: stats.belumDibaca },
-    { id: "sudah_dibaca", label: "Sudah Dibaca", count: stats.total - stats.belumDibaca },
+    {
+      id: "sudah_dibaca",
+      label: "Sudah Dibaca",
+      count: stats.total - stats.belumDibaca,
+    },
   ];
 
-  const handleMarkAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true, isNew: false } : n))
-    );
+  const handleMarkAsRead = async (id) => {
+    try {
+      await notifikasiService.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n.id === id ? { ...n, isRead: true, isNew: false } : n
+        )
+      );
+      fetchUnreadCount();
+    } catch (error) {
+      console.error("Error marking as read:", error);
+      // Still update locally for better UX
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n.id === id ? { ...n, isRead: true, isNew: false } : n
+        )
+      );
+    }
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((n) => ({ ...n, isRead: true, isNew: false }))
-    );
+  const handleMarkAllAsRead = async () => {
+    try {
+      await notifikasiService.markAllAsRead();
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, isRead: true, isNew: false }))
+      );
+      setUnreadCount(0);
+      toast.success("Semua notifikasi ditandai sudah dibaca");
+    } catch (error) {
+      console.error("Error marking all as read:", error);
+      // Still update locally
+      setNotifications((prev) =>
+        prev.map((n) => ({ ...n, isRead: true, isNew: false }))
+      );
+    }
   };
 
   const handleDelete = (id) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
+    toast.success("Notifikasi dihapus");
   };
 
   const handleDeleteAll = () => {
     if (window.confirm("Apakah Anda yakin ingin menghapus semua notifikasi?")) {
       setNotifications([]);
+      toast.success("Semua notifikasi dihapus");
     }
+  };
+
+  const handleRefresh = () => {
+    fetchNotifications();
+    fetchUnreadCount();
+    toast.success("Data diperbarui");
   };
 
   const filteredNotifications = notifications.filter((n) => {
@@ -143,12 +213,23 @@ export default function NotifikasiPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Notifikasi</h1>
-          <p className="text-text-tertiary text-sm mt-1">Kelola pemberitahuan dan aktivitas terbaru</p>
+          <p className="text-text-tertiary text-sm mt-1">
+            Kelola pemberitahuan dan aktivitas terbaru
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
+            onClick={handleRefresh}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary bg-surface border border-border rounded-lg hover:bg-surface-tertiary transition-all disabled:opacity-50"
+          >
+            <span className={loading ? "animate-spin" : ""}>🔄</span>
+            Refresh
+          </button>
+          <button
             onClick={handleMarkAllAsRead}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary bg-surface border border-border rounded-lg hover:bg-surface-tertiary transition-all"
+            disabled={stats.belumDibaca === 0}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary bg-surface border border-border rounded-lg hover:bg-surface-tertiary transition-all disabled:opacity-50"
           >
             <span>✓</span>
             Tandai Semua Dibaca
@@ -171,7 +252,9 @@ export default function NotifikasiPage() {
               <span className="text-lg">🔔</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-text-primary">{stats.total}</div>
+              <div className="text-2xl font-bold text-text-primary">
+                {stats.total}
+              </div>
               <div className="text-sm text-text-tertiary">Total Notifikasi</div>
             </div>
           </div>
@@ -182,7 +265,9 @@ export default function NotifikasiPage() {
               <span className="text-lg">📬</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-text-primary">{stats.belumDibaca}</div>
+              <div className="text-2xl font-bold text-text-primary">
+                {stats.belumDibaca}
+              </div>
               <div className="text-sm text-text-tertiary">Belum Dibaca</div>
             </div>
           </div>
@@ -193,7 +278,9 @@ export default function NotifikasiPage() {
               <span className="text-lg">📅</span>
             </div>
             <div>
-              <div className="text-2xl font-bold text-text-primary">{stats.hariIni}</div>
+              <div className="text-2xl font-bold text-text-primary">
+                {stats.hariIni}
+              </div>
               <div className="text-sm text-text-tertiary">Hari Ini</div>
             </div>
           </div>
@@ -216,9 +303,13 @@ export default function NotifikasiPage() {
                 }`}
               >
                 {tab.label}
-                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                  activeTab === tab.id ? "bg-accent text-white dark:text-gray-900" : "bg-surface-tertiary text-text-secondary"
-                }`}>
+                <span
+                  className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
+                    activeTab === tab.id
+                      ? "bg-accent text-white dark:text-gray-900"
+                      : "bg-surface-tertiary text-text-secondary"
+                  }`}
+                >
                   {tab.count}
                 </span>
               </button>
@@ -243,22 +334,30 @@ export default function NotifikasiPage() {
               >
                 <div className="flex items-start gap-4">
                   {/* Icon */}
-                  <div className={`w-12 h-12 ${notif.iconBg} dark:opacity-80 rounded-xl flex items-center justify-center shrink-0`}>
+                  <div
+                    className={`w-12 h-12 ${notif.iconBg} dark:opacity-80 rounded-xl flex items-center justify-center shrink-0`}
+                  >
                     <span className="text-xl">{notif.icon}</span>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="font-semibold text-text-primary">{notif.title}</h4>
+                      <h4 className="font-semibold text-text-primary">
+                        {notif.title}
+                      </h4>
                       {notif.isNew && (
                         <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                           BARU
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-text-secondary mb-1">{notif.content}</p>
-                    <p className="text-xs text-text-muted mb-3">{notif.detail}</p>
+                    <p className="text-sm text-text-secondary mb-1">
+                      {notif.content}
+                    </p>
+                    <p className="text-xs text-text-muted mb-3">
+                      {notif.detail}
+                    </p>
 
                     {/* Actions */}
                     <div className="flex items-center gap-2">
@@ -271,24 +370,36 @@ export default function NotifikasiPage() {
                         </button>
                       )}
                       {notif.actions.includes("lihat_detail") && (
-                        <button 
-                          onClick={() => alert('Lihat Detail (Logic akan diimplementasikan nanti)')}
+                        <button
+                          onClick={() =>
+                            alert(
+                              "Lihat Detail (Logic akan diimplementasikan nanti)"
+                            )
+                          }
                           className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface-tertiary rounded-lg hover:bg-border transition-colors"
                         >
                           → Lihat Detail
                         </button>
                       )}
                       {notif.actions.includes("download") && (
-                        <button 
-                          onClick={() => alert('Download (Logic akan diimplementasikan nanti)')}
+                        <button
+                          onClick={() =>
+                            alert(
+                              "Download (Logic akan diimplementasikan nanti)"
+                            )
+                          }
                           className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface-tertiary rounded-lg hover:bg-border transition-colors"
                         >
                           ↓ Download
                         </button>
                       )}
                       {notif.actions.includes("download_laporan") && (
-                        <button 
-                          onClick={() => alert('Download Laporan (Logic akan diimplementasikan nanti)')}
+                        <button
+                          onClick={() =>
+                            alert(
+                              "Download Laporan (Logic akan diimplementasikan nanti)"
+                            )
+                          }
                           className="px-3 py-1.5 text-xs font-medium text-text-secondary bg-surface-tertiary rounded-lg hover:bg-border transition-colors"
                         >
                           ↓ Download Laporan

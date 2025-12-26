@@ -1,9 +1,9 @@
 export default function MapLegend() {
   const statuses = [
-    { label: "Aktif", color: "#22c55e", icon: "✓" },
+    { label: "Aktif", color: "#10b981", icon: "✓" },
     { label: "Berperkara", color: "#ef4444", icon: "⚠" },
+    { label: "Indikasi Berperkara", color: "#3b82f6", icon: "⚡" },
     { label: "Tidak Aktif", color: "#f59e0b", icon: "○" },
-    { label: "Dijual", color: "#3b82f6", icon: "$" },
   ];
 
   return (
@@ -11,7 +11,9 @@ export default function MapLegend() {
       {/* Header */}
       <div className="border-b border-border bg-surface-secondary px-3 py-2.5 flex items-center gap-2">
         <span className="text-sm">🗺️</span>
-        <h3 className="font-semibold text-xs text-text-primary">Legenda Status</h3>
+        <h3 className="font-semibold text-xs text-text-primary">
+          Legenda Status
+        </h3>
       </div>
 
       {/* Legend Items */}
@@ -24,7 +26,9 @@ export default function MapLegend() {
             >
               {status.icon}
             </div>
-            <span className="text-xs text-text-secondary group-hover:text-text-primary transition-colors">{status.label}</span>
+            <span className="text-xs text-text-secondary group-hover:text-text-primary transition-colors">
+              {status.label}
+            </span>
           </div>
         ))}
       </div>
